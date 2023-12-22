@@ -30,97 +30,93 @@
   	<ol id="recordingsList"></ol>
     <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
   	<script src="./recorder.js"></script>
-  	<!-- <script src="./app.js"></script> -->
 
     <script>
-Vue.component('kabala-audio-recorder',{
-	name:'kabala-audio-recorder',
-	template:"" +
-		"<div>" +
-		"    <slot>" +
-		"        <i-button v-if='!isRecording' @click='startRecording()'><Icon type=\"md-radio-button-off\" size='24'></Icon></i-button>" +
-		"        <i-button v-else @click='stopRecording()' type='primary' ghost><Icon type=\"md-radio-button-on\" size='24'></Icon></i-button>" +
-		"    </slot>" +
-		"</div>" +
-		"",
-	data:function(){
-		return {
-			rec:null,
-			gumStream:null,
-			isRecording:false,
-		}
-	},
-	methods:{
-		// 开始录音
-		startRecording:function() {
-			let that = this;
-			if(navigator.mediaDevices && avigator.mediaDevices.getUserMedia){
-				var constraints = { audio: true, video:false }
-				navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-					that.isRecording = true;
-					that.gumStream = stream;
+        Vue.component('kabala-audio-recorder',{
+            name:'kabala-audio-recorder',
+            template:"" +
+                "<div>" +
+                "    <slot>" +
+                "        <i-button v-if='!isRecording' @click='startRecording()'><Icon type=\"md-radio-button-off\" size='24'></Icon></i-button>" +
+                "        <i-button v-else @click='stopRecording()' type='primary' ghost><Icon type=\"md-radio-button-on\" size='24'></Icon></i-button>" +
+                "    </slot>" +
+                "</div>" +
+                "",
+            data:function(){
+                return {
+                    rec:null,
+                    gumStream:null,
+                    isRecording:false,
+                }
+            },
+            methods:{
+                // 开始录音
+                startRecording:function() {
+                    let that = this;
+                    if(navigator.mediaDevices && avigator.mediaDevices.getUserMedia){
+                        var constraints = { audio: true, video:false }
+                        navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                            that.isRecording = true;
+                            that.gumStream = stream;
 
-					let audioContext = new AudioContext();
-					let input = audioContext.createMediaStreamSource(stream);
+                            let audioContext = new AudioContext();
+                            let input = audioContext.createMediaStreamSource(stream);
 
-					rec = new Recorder(input,{
-						numChannels:1,
-						type:"wav",
-						bitRate:128,
-						sampleRate:16000,
-						// bufferSize:8192,
-					})
+                            rec = new Recorder(input,{
+                                numChannels:1,
+                                type:"wav",
+                                bitRate:128,
+                                sampleRate:16000,
+                                // bufferSize:8192,
+                            })
 
-					navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
-					if(navigator.vibrate) {
-						console.info("支持设备震动！");
-						navigator.vibrate(1000);
-					} else {
-						console.log("不支持设备震动！");
-					}
+                            navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+                            if(navigator.vibrate) {
+                                console.info("支持设备震动！");
+                                navigator.vibrate(1000);
+                            } else {
+                                console.log("不支持设备震动！");
+                            }
 
-					rec.record();
-					that.$emit('on-start',vm);
-					console.info("开始录音");
-				}).catch(function(e) {
-					console.error(e);
-					that.error(e);
-					that.isRecording = false;
+                            rec.record();
+                            that.$emit('on-start',vm);
+                            console.info("开始录音");
+                        }).catch(function(e) {
+                            console.error(e);
+                            that.error(e);
+                            that.isRecording = false;
 
-				});
-			} else {
-				that.warn('当前环境不支持录音');
-			}
-		},
-		// 结束录音
-		stopRecording:function() {
-			console.info("结束录音");
-			if(this.isRecording){
-				this.rec.stop();
-				this.gumStream.getAudioTracks()[0].stop();
-				this.rec.exportWAV(this.convertBase64);
-			}
-		},
-		convertBase64:function(blob) {
-			let that = this;
-			let reader = new FileReader();
-			reader.onload = function(event) {
-				let base64String = event.target.result;
-				console.info('base64String==',base64String);
-				that.$emit('on-stop', base64String);
-				that.isRecording = false;
-			};
-			reader.readAsDataURL(blob);
-		}
-	},
-	// beforeCreate: function(){
-	// 	document.write('<script type="text/javascript" src="/kabala3rd/recorder.js"></script>');
-	// },
-	created:function(){
+                        });
+                    } else {
+                        that.warn('当前环境不支持录音');
+                    }
+                },
+                // 结束录音
+                stopRecording:function() {
+                    console.info("结束录音");
+                    if(this.isRecording){
+                        this.rec.stop();
+                        this.gumStream.getAudioTracks()[0].stop();
+                        this.rec.exportWAV(this.convertBase64);
+                    }
+                },
+                convertBase64:function(blob) {
+                    let that = this;
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                        let base64String = event.target.result;
+                        console.info('base64String==',base64String);
+                        that.$emit('on-stop', base64String);
+                        that.isRecording = false;
+                    };
+                    reader.readAsDataURL(blob);
+                }
+            },
+            created:function(){
 
-	}
-});
-new Vue({
+            }
+        });
+    new Vue({
         el:"#app",
         data:{
         },
