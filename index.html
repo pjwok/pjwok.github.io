@@ -6,13 +6,13 @@
     <title>录音2</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" type="text/css" href="style.css">
     <!-- import Vue.js -->
 <script src="//unpkg.com/vue@2.6.14/dist/vue.min.js"></script>
 <!-- import stylesheet -->
 <link rel="stylesheet" href="//unpkg.com/view-design/dist/styles/iview.css">
 <!-- import iView -->
 <script src="//unpkg.com/view-design/dist/iview.min.js"></script>
+<script src="./recorder.js"></script>
     
   </head>
   <body>
@@ -20,16 +20,6 @@
         <kabala-audio-recorder @on-stop="onStop" @on-start="onStart"></kabala-audio-recorder>
     </div>
     <hr>
-    <div id="controls">
-  	 <button id="recordButton">Record</button>
-  	 <button id="pauseButton" disabled>Pause</button>
-  	 <button id="stopButton" disabled>Stop</button>
-    </div>
-    <div id="formats">Format: start recording to see sample rate</div>
-  	<p><strong>Recordings:</strong></p>
-  	<ol id="recordingsList"></ol>
-    <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
-  	<script src="./recorder.js"></script>
 
     <script>
         Vue.component('kabala-audio-recorder',{
@@ -56,39 +46,44 @@
                     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
                         var constraints = { audio: true, video:false }
                         navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-                            that.isRecording = true;
-                            that.gumStream = stream;
+                            try{
+                                that.isRecording = true;
+                                that.gumStream = stream;
 
-                            let audioContext = new AudioContext();
-                            let input = audioContext.createMediaStreamSource(stream);
+                                let audioContext = new AudioContext();
+                                let input = audioContext.createMediaStreamSource(stream);
 
-                            rec = new Recorder(input,{
-                                numChannels:1,
-                                type:"wav",
-                                bitRate:128,
-                                sampleRate:16000,
-                                // bufferSize:8192,
-                            })
+                                rec = new Recorder(input,{
+                                    numChannels:1,
+                                    type:"wav",
+                                    bitRate:128,
+                                    sampleRate:16000,
+                                    // bufferSize:8192,
+                                })
 
-                            navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
-                            if(navigator.vibrate) {
-                                console.info("支持设备震动！");
-                                navigator.vibrate(1000);
-                            } else {
-                                console.log("不支持设备震动！");
+                                navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+                                if(navigator.vibrate) {
+                                    console.info("支持设备震动！");
+                                    navigator.vibrate(1000);
+                                } else {
+                                    console.log("不支持设备震动！");
+                                }
+
+                                rec.record();
+                                that.$emit('on-start',vm);
+                                alert("开始录音");
+                            }catch(e){
+                                alert(e.toString())
                             }
-
-                            rec.record();
-                            that.$emit('on-start',vm);
-                            alert("开始录音");
+                            
                         }).catch(function(e) {
                             console.error(e);
-                            that.error(e);
+                            alert(e.toString());
                             that.isRecording = false;
 
                         });
                     } else {
-                        that.warn('当前环境不支持录音');
+                        alert('当前环境不支持录音');
                     }
                 },
                 // 结束录音
