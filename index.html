@@ -53,7 +53,7 @@
                 // 开始录音
                 startRecording:function() {
                     let that = this;
-                    if(navigator.mediaDevices && avigator.mediaDevices.getUserMedia){
+                    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
                         var constraints = { audio: true, video:false }
                         navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
                             that.isRecording = true;
