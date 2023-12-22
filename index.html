@@ -53,7 +53,7 @@
                                 let audioContext = new AudioContext();
                                 let input = audioContext.createMediaStreamSource(stream);
 
-                                rec = new Recorder(input,{
+                                that.rec = new Recorder(input,{
                                     numChannels:1,
                                     type:"wav",
                                     bitRate:128,
@@ -69,8 +69,8 @@
                                     console.log("不支持设备震动！");
                                 }
 
-                                rec.record();
-                                that.$emit('on-start',vm);
+                                that.rec.record();
+                                that.$emit('on-start',that);
                                 alert("开始录音");
                             }catch(e){
                                 alert(e.toString())
@@ -92,6 +92,7 @@
                     // if(this.isRecording){
                         this.rec.stop();
                         this.gumStream.getAudioTracks()[0].stop();
+
                         this.rec.exportWAV(this.convertBase64);
                     // }
                 },
