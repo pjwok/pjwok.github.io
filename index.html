@@ -29,6 +29,7 @@
                 "    <slot>" +
                 "        <i-button v-if='!isRecording' @click='startRecording()'><Icon type=\"md-radio-button-off\" size='24'></Icon></i-button>" +
                 "        <i-button v-else @click='stopRecording()' type='primary' ghost><Icon type=\"md-radio-button-on\" size='24'></Icon></i-button>" +
+              " <audio controls class=\"audio-player\"></audio>"+
                 "    </slot>" +
                 "</div>" +
                 "",
@@ -108,6 +109,15 @@
                         that.isRecording = false;
                     };
                     reader.readAsDataURL(blob);
+
+try{
+                        var audioURL = window.URL.createObjectURL(blob);
+                        let audio = document.querySelector('.audio-player');
+                        audio.src = audioURL;
+                    }catch(e){
+                        console.error(e);
+                    }
+                  
                 }
             },
             created:function(){
