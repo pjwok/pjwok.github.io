@@ -103,6 +103,7 @@
                     reader.onload = function(event) {
                         let base64String = event.target.result;
                         alert('base64String=='+base64String);
+                        console.log(base64String)
                         that.$emit('on-stop', base64String);
                         that.isRecording = false;
                     };
