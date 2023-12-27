@@ -72,7 +72,7 @@
 
                                 that.rec.record();
                                 that.$emit('on-start',that);
-                                alert("开始录音");
+                                console.log("开始录音");
                             }catch(e){
                                 alert(e.toString())
                             }
@@ -89,7 +89,7 @@
                 },
                 // 结束录音
                 stopRecording:function() {
-                    alert("结束录音");
+                    console.log("结束录音");
                     // if(this.isRecording){
                         this.rec.stop();
                         this.gumStream.getAudioTracks()[0].stop();
@@ -98,7 +98,7 @@
                     // }
                 },
                 convertBase64:function(blob) {
-                    alert('转换')
+                    console.log('转换')
                     let that = this;
                     let reader = new FileReader();
                     reader.onload = function(event) {
@@ -172,10 +172,10 @@ try{
         },
         methods:{
             onStart:function(){
-                alert('start')
+                console.log('start')
             },
             onStop:function(base64Str){
-                alert(base64Str)
+                
             }
         }
     })
