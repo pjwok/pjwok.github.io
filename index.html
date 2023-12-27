@@ -18,6 +18,7 @@
   <body>
     <div id="app">
         <kabala-audio-recorder @on-stop="onStop" @on-start="onStart"></kabala-audio-recorder>
+	    <div style='height:400px;overflow:auto;border:1px solid #ddd;'>{{theBase64}}</div>
     </div>
     <hr>
 
@@ -37,6 +38,7 @@
                     rec:null,
                     gumStream:null,
                     isRecording:false,
+			theBase64:"",
                 }
             },
             methods:{
@@ -168,13 +170,14 @@ try{
     new Vue({
         el:"#app",
         data:{
+		theBase64:""
         },
         methods:{
             onStart:function(){
                 console.log('start')
             },
             onStop:function(base64Str){
-                
+                this.theBase64 = base64Str
             }
         }
     })
