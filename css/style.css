@@ -92,7 +92,7 @@ li {
 }
 .mainArea .box-title{
     padding:0 32px;
-    height: 75px;
+    height: 60px;
     background-color: #ffcc02;
     color:#fff;
     text-align: center;
@@ -100,8 +100,8 @@ li {
 .mainArea .box-title p{
     display: inline-block;
     background-color: #0f218b;
-    padding: 4px 70px 5px;
-    font-size:50px;
+    padding: 5px 70px 5px;
+    font-size: 38px;
 
 }
 .mainArea .product-box{
