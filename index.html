@@ -16,7 +16,10 @@
     
   </head>
   <body>
+	  
     <div id="app">
+	    <button @click='onClose'>关闭页面</button>
+	    <button @click='onClose2'>关闭页面 dd</button>
         <kabala-audio-recorder @on-stop="onStop" @on-start="onStart"></kabala-audio-recorder>
 	    <div style='height:400px;overflow:auto;border:1px solid #ddd;'>{{theBase64}}</div>
     </div>
@@ -173,6 +176,21 @@ try{
 		theBase64:""
         },
         methods:{
+		onClose:function(){
+			window.close();
+		},
+		onClose2: function(){
+			try{
+				dd.closePage({
+				  success: () => {},
+				  fail: () => {},
+				  complete: () => {},
+				});	
+			}catch(e){
+				alert(e.toString())
+			}
+			
+		},
             onStart:function(){
                 console.log('start')
             },
